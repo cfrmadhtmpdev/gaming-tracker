@@ -1,44 +1,46 @@
-<!DOCTYPE html>
-<html lang="bs">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LootVault - Gaming Market & Inventory Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.tailwindcss.com/3.4.17"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-body{font-family:'Inter',sans-serif;background:#0b0f19;color:#e2e8f0;top:0!important}
-.font-gaming{font-family:'Rajdhani',sans-serif}
-.glass-card{background:rgba(17,24,39,.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08)}
-.glass-hover:hover{border-color:rgba(56,189,248,.4);box-shadow:0 0 20px rgba(56,189,248,.15)}
-.inp{width:100%;background:#0f172a;border:1px solid #334155;border-radius:.5rem;padding:.5rem .75rem;font-size:.875rem;color:#fff;margin-top:.25rem}
-.inp:focus,button:focus-visible{outline:2px solid #22d3ee;outline-offset:1px;border-color:#22d3ee}
-.btn{padding:.5rem 1rem;background:#06b6d4;color:#020617;font-weight:700;border-radius:.5rem;font-size:.875rem;transition:.15s}.btn:hover{background:#22d3ee}
-.btn2{padding:.4rem .75rem;background:#1e293b;border:1px solid #334155;border-radius:.5rem;font-size:.75rem;color:#fff}.btn2:hover{background:#334155}
-.tab{padding:.5rem 1rem;border-radius:.75rem;color:#94a3b8;font-weight:600;font-size:.875rem;white-space:nowrap;border:1px solid transparent}
-.tab:hover{background:#1e293b}.tab.on{background:rgba(6,182,212,.1);color:#22d3ee;border-color:rgba(6,182,212,.3)}
-.badge{font-size:.7rem;padding:.1rem .5rem;border-radius:.4rem;border:1px solid currentColor;font-weight:600}
-.goog-te-gadget-simple{background:transparent!important;border:none!important;padding:0!important;font-size:.875rem!important}
-.goog-te-gadget-simple span{color:#94a3b8!important}.goog-te-banner-frame{display:none!important}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-</head>
-<body class="min-h-screen flex flex-col">
-<header class="glass-card sticky top-0 z-40 border-b border-slate-800 px-4 py-3">
- <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-  <h1 class="font-gaming text-2xl font-bold tracking-wider text-white flex items-center gap-2">
-   <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-xl"><i class="fa-solid fa-vault"></i></span>
-   LOOT<span class="text-cyan-400">VAULT</span></h1>
-  <div class="flex items-center gap-3 flex-wrap">
-   <label class="sr-only" for="cur">Valuta</label>
-   <select id="cur" onchange="setCur(this.value)" class="inp !mt-0 !w-auto"><option value="EUR">€ EUR</option><option value="BAM">KM BAM</option><option value="USD">$ USD</option></select>
-   <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700/60"><i class="fa-solid fa-globe text-cyan-400 text-sm"></i><div id="google_translate_element"></div></div>
-   <div id="authContainer" class="flex items-center gap-2"></div>
-  </div>
  </div>
-</header>
 
-<main class="max-w-7xl mx-auto w-full p-4 md:p-6 space-y-6 flex-grow">
+ <div id="content-cashout" role="tabpanel" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="glass-card p-6 rounded-2xl space-y-4">
+   <h2 class="font-gaming text-xl font-bold text-white">Kalkulator čiste zarade</h2>
+   <div><label for="calcPrice" class="text-xs text-slate-400">Prodajna cijena (<span class="sym"></span>)</label><input type="number" id="calcPrice" value="100" min="0" oninput="calculateCashout()" class="inp"></div>
+   <div><label for="calcCost" class="text-xs text-slate-400">Nabavna cijena (<span class="sym"></span>)</label><input type="number" id="calcCost" value="70" min="0" oninput="calculateCashout()" class="inp"></div>
+   <p class="text-xs text-slate-500">Provizije su okvirne i mijenjaju se; provjeri ih na platformi prije prodaje.</p>
+  </div>
+  <div class="glass-card p-6 rounded-2xl space-y-3"><h2 class="font-gaming text-xl font-bold text-white">Poređenje platformi</h2><div id="cashRes" class="space-y-3 text-sm"></div></div>
+ </div>
+</main>
+
+<footer class="glass-card border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-500">
+ © 2026 LootVault · Podaci se čuvaju lokalno u ovom pregledniku. Cijene unosiš ti; ništa ovdje nije finansijski savjet.
+</footer>
+
+<div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+ <div class="glass-card w-full max-w-md p-6 rounded-2xl space-y-4 relative">
+  <button onclick="closeAuthModal()" aria-label="Zatvori" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+  <h2 id="authTitle" class="font-gaming text-2xl font-bold text-white text-center">Lokalni profil</h2>
+  <p class="text-xs text-slate-400 text-center">Nema servera, pa nema ni lozinke. Profil se čuva samo u ovom pregledniku.</p>
+  <form onsubmit="handleAuth(event)" class="space-y-3">
+   <div><label for="authNick" class="text-xs text-slate-400">Nadimak</label><input id="authNick" required maxlength="30" class="inp"></div>
+   <div><label for="authEmail" class="text-xs text-slate-400">Email (opcionalno)</label><input type="email" id="authEmail" class="inp"></div>
+   <button class="btn w-full">Sačuvaj profil</button>
+  </form>
+ </div>
+</div>
+<div id="toasts" class="fixed bottom-4 right-4 z-50 space-y-2" aria-live="polite"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='lootvault_v1',DAY=864e5,GAMES=['CS2','WoW','PoE','Rust','Dota 2'];
+const RATES={EUR:[1,'€'],BAM:[1.95583,'KM'],USD:[1.08,'$']};
+const GC={CS2:'cyan','WoW':'amber',PoE:'purple',Rust:'red','Dota 2':'emerald'};
+const FEE=.05;
+const demo=()=>{const n=Date.now();return[
+{id:1,name:'AK-47 | Redline (FT)',game:'CS2',buy:12.5,cur:15.8,lockUntil:0,target:15},
+{id:2,name:'AWP | Asiimov (BS)',game:'CS2',buy:38,cur:44.2,lockUntil:n+3*DAY,target:0},
+{id:3,name:'Divine Orb x20',game:'PoE',buy:60,cur:52,lockUntil:0,target:0},
+{id:4,name:'WoW Token',game:'WoW',buy:20,cur:21.5,lockUntil:0,target:0},
+{id:5,name:'Glowing Mask',game:'Rust',buy:30,cur:41,lockUntil:n+6*DAY,target:0},
+{id:6,name:'Arcana set',game:'Dota 2',buy:25,cur:24,lockUntil:0,target:0}]};
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.items))return d}catch(e){}
